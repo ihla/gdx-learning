@@ -1,5 +1,12 @@
 package co.joyatwork.tweenanimation;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.equations.Sine;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -15,7 +22,8 @@ public class TweenAnimationDemo implements ApplicationListener {
 	private SpriteBatch batch;
 	private Texture texture;
 	private Sprite sprite;
-	
+	private TweenManager tweenManager = new TweenManager();
+
 	@Override
 	public void create() {		
 		float w = Gdx.graphics.getWidth();
@@ -24,16 +32,33 @@ public class TweenAnimationDemo implements ApplicationListener {
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
 		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
+		texture = new Texture(Gdx.files.internal("data/bubble.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
+		TextureRegion region = new TextureRegion(texture);
 		
 		sprite = new Sprite(region);
-		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
+		float sw = 0.1f;
+		sprite.setSize(sw, sw * sprite.getHeight() / sprite.getWidth());
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		
+		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+		Tween.call(windCallback).start(tweenManager);
 	}
+
+	private final TweenCallback windCallback = new TweenCallback() {
+		@Override
+		public void onEvent(int type, BaseTween<?> source) {
+			Tween.to(sprite, SpriteAccessor.POSITION_XY, 10f).target(0f, 0.25f)
+				.ease(Bounce.OUT)
+				.delay(1.0f)
+				//.repeatYoyo(1, 1f)
+				//.repeat(-1, 0.001f)
+				.setCallback(windCallback)
+				.start(tweenManager);
+		}
+	};
 
 	@Override
 	public void dispose() {
@@ -43,6 +68,8 @@ public class TweenAnimationDemo implements ApplicationListener {
 
 	@Override
 	public void render() {		
+		tweenManager.update(Gdx.graphics.getDeltaTime());
+
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
