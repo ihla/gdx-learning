@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "tween-engine";
 		cfg.useGL20 = false;
-		cfg.width = 480;
-		cfg.height = 320;
+		cfg.width = 1205;
+		cfg.height = 800;
 		
 		new LwjglApplication(new TweenAnimationDemo(), cfg);
 	}
