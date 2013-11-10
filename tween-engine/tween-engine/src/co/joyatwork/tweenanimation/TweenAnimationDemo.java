@@ -5,6 +5,10 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.equations.Linear;
+import aurelienribon.tweenengine.equations.Elastic;
+import aurelienribon.tweenengine.equations.Back;
+import aurelienribon.tweenengine.equations.Sine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -57,18 +61,23 @@ public class TweenAnimationDemo implements ApplicationListener {
 		Gdx.app.log(TAG, "sprite position x,y " + sprite.getX() + "," + sprite.getY());
 		
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		Tween.call(windCallback).start(tweenManager);
+		Tween.call(moveAnimation).start(tweenManager);
 	}
 
-	private final TweenCallback windCallback = new TweenCallback() {
+	private final TweenCallback moveAnimation = new TweenCallback() {
 		@Override
 		public void onEvent(int type, BaseTween<?> source) {
-			Tween.to(sprite, SpriteAccessor.POSITION_XY, 10f).target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
-				.ease(Bounce.OUT)
+			Tween.to(sprite, SpriteAccessor.POSITION_XY, 10f)
+				.target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
+				.ease(Bounce.INOUT)
+				//.ease(Linear.INOUT)
+				//.ease(Elastic.INOUT)
+				//.ease(Back.INOUT)
+				//.ease(Sine.INOUT)
 				.delay(2.0f)
-				//.repeatYoyo(1, 1f)
-				//.repeat(-1, 0.001f)
-				.setCallback(windCallback)
+				.repeatYoyo(Tween.INFINITY, 0f)
+				//.repeat(Tween.INFINITY, 0f)
+				.setCallback(moveAnimation)
 				.start(tweenManager);
 		}
 	};
