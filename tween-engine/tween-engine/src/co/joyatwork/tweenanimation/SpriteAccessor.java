@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class SpriteAccessor implements TweenAccessor<Sprite> {
 	public static final int SKEW_X2X3 = 1;
 	public static final int POSITION_XY = 2;
+	public static final int WIDTH_HEIGHT = 3;
 
 	@Override
 	public int getValues(Sprite target, int tweenType, float[] returnValues) {
@@ -19,6 +20,10 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 			case POSITION_XY:
 				returnValues[0] = target.getX();
 				returnValues[1] = target.getY();
+				return 2;
+			case WIDTH_HEIGHT:
+				returnValues[0] = target.getWidth();
+				returnValues[1] = target.getHeight();
 				return 2;
 		}
 		
@@ -39,6 +44,9 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 			case POSITION_XY:
 				target.setX(newValues[0]);
 				target.setY(newValues[1]);
+				break;
+			case WIDTH_HEIGHT:
+				target.setSize(newValues[0], newValues[1]);
 				break;
 		}
 	}

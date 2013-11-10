@@ -61,7 +61,10 @@ public class TweenAnimationDemo implements ApplicationListener {
 		Gdx.app.log(TAG, "sprite position x,y " + sprite.getX() + "," + sprite.getY());
 		
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		Tween.call(moveAnimation).start(tweenManager);
+		//Tween.call(moveAnimation).start(tweenManager);
+		Tween.call(squeezeAnimation).start(tweenManager);
+		squeezeToWidth = sprite.getWidth()*1.1f;
+		squeezeToHeight = sprite.getHeight()/2;
 	}
 
 	private final TweenCallback moveAnimation = new TweenCallback() {
@@ -81,7 +84,23 @@ public class TweenAnimationDemo implements ApplicationListener {
 				.start(tweenManager);
 		}
 	};
+	protected float squeezeToWidth;
+	protected float squeezeToHeight;
 
+	private final TweenCallback squeezeAnimation = new TweenCallback() {
+		
+		@Override
+		public void onEvent(int type, BaseTween<?> source) {
+			Tween.to(sprite, SpriteAccessor.WIDTH_HEIGHT, 5f)
+				.target(squeezeToWidth, squeezeToHeight)
+				.ease(Linear.INOUT)
+				.delay(2f)
+				.setCallback(squeezeAnimation)
+				.start(tweenManager);
+			
+		}
+	};
+	
 	@Override
 	public void dispose() {
 		batch.dispose();
@@ -117,6 +136,7 @@ public class TweenAnimationDemo implements ApplicationListener {
 		batch.end();
 
 		// origin cross
+		/*
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(0f, 1f, 0f, 1f);
@@ -125,6 +145,7 @@ public class TweenAnimationDemo implements ApplicationListener {
 		shapeRenderer.line(originCrossX - sprite.getWidth()/2, originCrossY, originCrossX + sprite.getWidth()/2, originCrossY);
 		shapeRenderer.line(originCrossX, originCrossY - sprite.getHeight()/2, originCrossX, originCrossY + sprite.getHeight()/2);
 		shapeRenderer.end();
+		*/
 	}
 
 	@Override
