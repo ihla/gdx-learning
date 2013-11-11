@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class TweenAnimationDemo implements ApplicationListener {
+	public static final int DECIMAL_DIGITS = 5;
 	private static final String TAG = "TweenAnimationDemo";
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -41,7 +42,7 @@ public class TweenAnimationDemo implements ApplicationListener {
 	protected float squeezeToHeight;
 	private float deltaX;
 	private float deltaY;
-	protected static final float widthScaleFactor = 1.1f;
+	protected static final float widthScaleFactor = 1.2f;
 	protected static final float heightScaleFactor = 0.7f;
 
 	 /**
@@ -86,7 +87,6 @@ public class TweenAnimationDemo implements ApplicationListener {
 		Gdx.app.log(TAG, "sprite position x,y " + sprite.getX() + "," + sprite.getY());
 		spriteWidth = sprite.getWidth();
 		spriteHeight = sprite.getHeight();
-		Gdx.app.log(TAG, "Y1,Y2 " + sprite.getVertices()[SpriteBatch.Y1] + "," + sprite.getVertices()[SpriteBatch.Y2]);
 		
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 		
@@ -94,14 +94,14 @@ public class TweenAnimationDemo implements ApplicationListener {
 		
 		squeezeToWidth = widthScaleFactor * spriteWidth;
 		squeezeToHeight = heightScaleFactor * spriteHeight;
-		Gdx.app.log(TAG, "squeezeToWidth,squeezeToHeight " + squeezeToWidth + "," + squeezeToHeight);
+		//Gdx.app.log(TAG, "squeezeToWidth,squeezeToHeight " + squeezeToWidth + "," + squeezeToHeight);
 		//Tween.call(widthHeightAnimation).start(tweenManager);
 		
 		
 		deltaX = (widthScaleFactor - 1.0f) * (spriteWidth/2);
 		deltaY = (1.0f - heightScaleFactor) * (spriteHeight/2);
-		deltaX = round(deltaX, 3);
-		deltaY = round(deltaY, 3);
+		deltaX = round(deltaX, DECIMAL_DIGITS);
+		deltaY = round(deltaY, DECIMAL_DIGITS);
 		Gdx.app.log(TAG, "deltaX,deltaY " + deltaX + "," + deltaY);
 		Tween.call(squeezeAnimation).start(tweenManager);
 
@@ -110,15 +110,15 @@ public class TweenAnimationDemo implements ApplicationListener {
 	private final TweenCallback moveAnimation = new TweenCallback() {
 		@Override
 		public void onEvent(int type, BaseTween<?> source) {
-			Tween.to(sprite, SpriteAccessor.POSITION_XY, 10f)
+			Tween.to(sprite, SpriteAccessor.POSITION_XY, 2.5f)
 				.target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
-				//.ease(Bounce.INOUT)
-				.ease(Linear.INOUT)
+				.ease(Bounce.INOUT)
+				//.ease(Linear.INOUT)
 				//.ease(Elastic.INOUT)
 				//.ease(Back.INOUT)
 				//.ease(Sine.INOUT)
 				.delay(2.0f)
-				//.repeatYoyo(Tween.INFINITY, 0f)
+				.repeatYoyo(Tween.INFINITY, 0f)
 				//.repeat(Tween.INFINITY, 0f)
 				.setCallback(moveAnimation)
 				.start(tweenManager);
@@ -145,10 +145,11 @@ public class TweenAnimationDemo implements ApplicationListener {
 		@Override
 		public void onEvent(int type, BaseTween<?> source) {
 			
-			Tween.to(sprite, SpriteAccessor.REC_SCALE_XY, 5f)
+			Tween.to(sprite, SpriteAccessor.REC_SCALE_XY, 2.5f)
 				.target(deltaX, deltaY)
 				.ease(Linear.INOUT)
 				.delay(2f)
+				.repeatYoyo(Tween.INFINITY, 0)
 				.setCallback(squeezeAnimation)
 				.start(tweenManager);
 		}
@@ -189,7 +190,7 @@ public class TweenAnimationDemo implements ApplicationListener {
 		batch.end();
 
 		// origin cross
-		/*
+		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(0f, 1f, 0f, 1f);
@@ -198,7 +199,7 @@ public class TweenAnimationDemo implements ApplicationListener {
 		shapeRenderer.line(originCrossX - sprite.getWidth()/2, originCrossY, originCrossX + sprite.getWidth()/2, originCrossY);
 		shapeRenderer.line(originCrossX, originCrossY - sprite.getHeight()/2, originCrossX, originCrossY + sprite.getHeight()/2);
 		shapeRenderer.end();
-		*/
+		
 	}
 
 	@Override

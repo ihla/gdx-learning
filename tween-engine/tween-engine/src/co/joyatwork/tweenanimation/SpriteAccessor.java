@@ -33,13 +33,22 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				return 2;
 			case REC_SCALE_XY: {
 				float[] vs = target.getVertices();
+				
 				// delta x
-				returnValues[0] = TweenAnimationDemo.round(
-							(vs[SpriteBatch.X4] - vs[SpriteBatch.X1] - target.getWidth())/2, 3);
+				returnValues[0] = Math.abs(TweenAnimationDemo.round(
+							(vs[SpriteBatch.X4] - vs[SpriteBatch.X1] - target.getWidth())/2, TweenAnimationDemo.DECIMAL_DIGITS));
 				// delta y
-				returnValues[1] = TweenAnimationDemo.round(
-						(vs[SpriteBatch.Y2] - vs[SpriteBatch.Y1] - target.getHeight())/2, 3);
-				Gdx.app.log(TAG, "get x,y " + returnValues[0] + "," + returnValues[1]);
+				returnValues[1] = Math.abs(TweenAnimationDemo.round(
+						(vs[SpriteBatch.Y2] - vs[SpriteBatch.Y1] - target.getHeight())/2, TweenAnimationDemo.DECIMAL_DIGITS));
+				/*
+				// delta x
+				returnValues[0] = Math.abs(
+							(vs[SpriteBatch.X4] - vs[SpriteBatch.X1] - target.getWidth())/2);
+				// delta y
+				returnValues[1] = Math.abs(
+						(vs[SpriteBatch.Y2] - vs[SpriteBatch.Y1] - target.getHeight())/2);
+				*/
+				//Gdx.app.log(TAG, "get x,y " + returnValues[0] + "," + returnValues[1]);
 				return 2;
 			}
 				
@@ -74,17 +83,31 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				float y1 = target.getY();
 				float y2 = y1 + target.getHeight();
 				float[] vs = target.getVertices();
-				vs[SpriteBatch.X1] = TweenAnimationDemo.round(x1 - newValues[0], 3);
-				vs[SpriteBatch.Y1] = TweenAnimationDemo.round(y1 + newValues[1], 3);
 				
-				vs[SpriteBatch.X2] = TweenAnimationDemo.round(x1 - newValues[0], 3);
-				vs[SpriteBatch.Y2] = TweenAnimationDemo.round(y2 - newValues[1], 3);
+				vs[SpriteBatch.X1] = TweenAnimationDemo.round(x1 - newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
+				vs[SpriteBatch.Y1] = TweenAnimationDemo.round(y1 + newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
 				
-				vs[SpriteBatch.X4] = TweenAnimationDemo.round(x4 + newValues[0], 3);
-				vs[SpriteBatch.Y4] = TweenAnimationDemo.round(y1 + newValues[1], 3);
+				vs[SpriteBatch.X2] = TweenAnimationDemo.round(x1 - newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
+				vs[SpriteBatch.Y2] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
 				
-				vs[SpriteBatch.X3] = TweenAnimationDemo.round(x4 + newValues[0], 3);
-				vs[SpriteBatch.Y3] = TweenAnimationDemo.round(y2 - newValues[1], 3);
+				vs[SpriteBatch.X4] = TweenAnimationDemo.round(x4 + newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
+				vs[SpriteBatch.Y4] = TweenAnimationDemo.round(y1 + newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
+				
+				vs[SpriteBatch.X3] = TweenAnimationDemo.round(x4 + newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
+				vs[SpriteBatch.Y3] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
+				/*
+				vs[SpriteBatch.X1] = x1 - newValues[0];
+				vs[SpriteBatch.Y1] = y1 + newValues[1];
+				
+				vs[SpriteBatch.X2] = x1 - newValues[0];
+				vs[SpriteBatch.Y2] = y2 - newValues[1];
+				
+				vs[SpriteBatch.X4] = x4 + newValues[0];
+				vs[SpriteBatch.Y4] = y1 + newValues[1];
+				
+				vs[SpriteBatch.X3] = x4 + newValues[0];
+				vs[SpriteBatch.Y3] = y2 - newValues[1];
+				*/
 				break;
 			}
 		}
