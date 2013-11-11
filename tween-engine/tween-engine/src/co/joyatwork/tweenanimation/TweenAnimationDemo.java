@@ -1,5 +1,7 @@
 package co.joyatwork.tweenanimation;
 
+import java.math.BigDecimal;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -32,12 +34,35 @@ public class TweenAnimationDemo implements ApplicationListener {
 	private float viewPortWidth;
 	private float viewPortHeight;
 
+	protected float spriteWidth;
+	protected float spriteHeight;
+
+	protected float squeezeToWidth;
+	protected float squeezeToHeight;
+	private float deltaX;
+	private float deltaY;
+	protected static final float widthScaleFactor = 1.1f;
+	protected static final float heightScaleFactor = 0.7f;
+
+	 /**
+     * Round to certain number of decimals
+     * 
+     * @param d
+     * @param decimalPlace
+     * @return
+     */
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
+    
 	@Override
 	public void create() {		
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		camera = new OrthographicCamera((viewPortWidth = 1), (viewPortHeight = h/w));
+		camera = new OrthographicCamera((viewPortWidth = 1), (viewPortHeight = viewPortWidth * h/w));
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		tweenManager = new TweenManager();
@@ -59,12 +84,27 @@ public class TweenAnimationDemo implements ApplicationListener {
 		Gdx.app.log(TAG, "sprite origin x,y " + sprite.getOriginX() + "," + sprite.getOriginY());
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 		Gdx.app.log(TAG, "sprite position x,y " + sprite.getX() + "," + sprite.getY());
+		spriteWidth = sprite.getWidth();
+		spriteHeight = sprite.getHeight();
+		Gdx.app.log(TAG, "Y1,Y2 " + sprite.getVertices()[SpriteBatch.Y1] + "," + sprite.getVertices()[SpriteBatch.Y2]);
 		
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+		
 		//Tween.call(moveAnimation).start(tweenManager);
+		
+		squeezeToWidth = widthScaleFactor * spriteWidth;
+		squeezeToHeight = heightScaleFactor * spriteHeight;
+		Gdx.app.log(TAG, "squeezeToWidth,squeezeToHeight " + squeezeToWidth + "," + squeezeToHeight);
+		//Tween.call(widthHeightAnimation).start(tweenManager);
+		
+		
+		deltaX = (widthScaleFactor - 1.0f) * (spriteWidth/2);
+		deltaY = (1.0f - heightScaleFactor) * (spriteHeight/2);
+		deltaX = round(deltaX, 3);
+		deltaY = round(deltaY, 3);
+		Gdx.app.log(TAG, "deltaX,deltaY " + deltaX + "," + deltaY);
 		Tween.call(squeezeAnimation).start(tweenManager);
-		squeezeToWidth = sprite.getWidth()*1.1f;
-		squeezeToHeight = sprite.getHeight()/2;
+
 	}
 
 	private final TweenCallback moveAnimation = new TweenCallback() {
@@ -72,35 +112,48 @@ public class TweenAnimationDemo implements ApplicationListener {
 		public void onEvent(int type, BaseTween<?> source) {
 			Tween.to(sprite, SpriteAccessor.POSITION_XY, 10f)
 				.target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
-				.ease(Bounce.INOUT)
-				//.ease(Linear.INOUT)
+				//.ease(Bounce.INOUT)
+				.ease(Linear.INOUT)
 				//.ease(Elastic.INOUT)
 				//.ease(Back.INOUT)
 				//.ease(Sine.INOUT)
 				.delay(2.0f)
-				.repeatYoyo(Tween.INFINITY, 0f)
+				//.repeatYoyo(Tween.INFINITY, 0f)
 				//.repeat(Tween.INFINITY, 0f)
 				.setCallback(moveAnimation)
 				.start(tweenManager);
 		}
 	};
-	protected float squeezeToWidth;
-	protected float squeezeToHeight;
+
+	private final TweenCallback widthHeightAnimation = new TweenCallback() {
+		
+		@Override
+		public void onEvent(int type, BaseTween<?> source) {
+
+			Tween.to(sprite, SpriteAccessor.WIDTH_HEIGHT, 5f)
+				.target(squeezeToWidth, squeezeToHeight)
+				.ease(Linear.INOUT)
+				.delay(2f)
+				.setCallback(widthHeightAnimation)
+				.start(tweenManager);
+			
+		}
+	};
 
 	private final TweenCallback squeezeAnimation = new TweenCallback() {
 		
 		@Override
 		public void onEvent(int type, BaseTween<?> source) {
-			Tween.to(sprite, SpriteAccessor.WIDTH_HEIGHT, 5f)
-				.target(squeezeToWidth, squeezeToHeight)
+			
+			Tween.to(sprite, SpriteAccessor.REC_SCALE_XY, 5f)
+				.target(deltaX, deltaY)
 				.ease(Linear.INOUT)
 				.delay(2f)
 				.setCallback(squeezeAnimation)
 				.start(tweenManager);
-			
 		}
 	};
-	
+
 	@Override
 	public void dispose() {
 		batch.dispose();
