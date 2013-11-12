@@ -88,13 +88,14 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 				vs[SpriteBatch.Y1] = TweenAnimationDemo.round(y1 + newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
 				
 				vs[SpriteBatch.X2] = TweenAnimationDemo.round(x1 - newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
-				vs[SpriteBatch.Y2] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
+				//vs[SpriteBatch.Y2] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
 				
 				vs[SpriteBatch.X4] = TweenAnimationDemo.round(x4 + newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
 				vs[SpriteBatch.Y4] = TweenAnimationDemo.round(y1 + newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
 				
 				vs[SpriteBatch.X3] = TweenAnimationDemo.round(x4 + newValues[0], TweenAnimationDemo.DECIMAL_DIGITS);
-				vs[SpriteBatch.Y3] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
+				//vs[SpriteBatch.Y3] = TweenAnimationDemo.round(y2 - newValues[1], TweenAnimationDemo.DECIMAL_DIGITS);
+				
 				/*
 				vs[SpriteBatch.X1] = x1 - newValues[0];
 				vs[SpriteBatch.Y1] = y1 + newValues[1];

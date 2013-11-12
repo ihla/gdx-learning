@@ -3,6 +3,7 @@ package co.joyatwork.tweenanimation;
 import java.math.BigDecimal;
 
 import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
@@ -103,8 +104,18 @@ public class TweenAnimationDemo implements ApplicationListener {
 		deltaX = round(deltaX, DECIMAL_DIGITS);
 		deltaY = round(deltaY, DECIMAL_DIGITS);
 		Gdx.app.log(TAG, "deltaX,deltaY " + deltaX + "," + deltaY);
-		Tween.call(squeezeAnimation).start(tweenManager);
-
+		//Tween.call(squeezeAnimation).start(tweenManager);
+		
+		Timeline.createSequence()
+			.push(Tween.to(sprite, SpriteAccessor.POSITION_XY, 2.5f)
+						.target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
+						.ease(Linear.INOUT))
+			.push(Tween.to(sprite, SpriteAccessor.REC_SCALE_XY, 1f)
+						.target(deltaX, deltaY)
+						.ease(Linear.INOUT))
+			.repeat(Tween.INFINITY, 0.5f)
+			.start(tweenManager);
+		
 	}
 
 	private final TweenCallback moveAnimation = new TweenCallback() {
@@ -112,15 +123,15 @@ public class TweenAnimationDemo implements ApplicationListener {
 		public void onEvent(int type, BaseTween<?> source) {
 			Tween.to(sprite, SpriteAccessor.POSITION_XY, 2.5f)
 				.target(sprite.getX(), viewPortHeight/2 - sprite.getHeight())
-				.ease(Bounce.INOUT)
+				.ease(Bounce.OUT)
 				//.ease(Linear.INOUT)
 				//.ease(Elastic.INOUT)
 				//.ease(Back.INOUT)
 				//.ease(Sine.INOUT)
 				.delay(2.0f)
-				.repeatYoyo(Tween.INFINITY, 0f)
+				//.repeatYoyo(Tween.INFINITY, 0f)
 				//.repeat(Tween.INFINITY, 0f)
-				.setCallback(moveAnimation)
+				//.setCallback(moveAnimation)
 				.start(tweenManager);
 		}
 	};
@@ -148,9 +159,10 @@ public class TweenAnimationDemo implements ApplicationListener {
 			Tween.to(sprite, SpriteAccessor.REC_SCALE_XY, 2.5f)
 				.target(deltaX, deltaY)
 				.ease(Linear.INOUT)
-				.delay(2f)
-				.repeatYoyo(Tween.INFINITY, 0)
-				.setCallback(squeezeAnimation)
+				//.delay(2f)
+				//.repeatYoyo(Tween.INFINITY, 0)
+				//.repeat(Tween.INFINITY, 0f)
+				//.setCallback(squeezeAnimation)
 				.start(tweenManager);
 		}
 	};
